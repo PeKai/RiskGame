@@ -1,3 +1,5 @@
 # RiskGame
 
-Python PyGame remake of the origial Risk Game, with grafics.
+Python PyGame remake of the original Risk Game, with graphics.
+
+
