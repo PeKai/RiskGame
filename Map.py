@@ -33,8 +33,7 @@ class Map:
         self.long_scan = pg.Vector2(1000, 50)
 
     def json_map(self):
-        with open("/Users/maximilianrahneberg/PycharmProjects/RiskGame/Proprietary Out-Source "
-                  "Data/Data/Geo/polygon_xy_flat.json", "r") as f:
+        with open("/Users/USERNAME/PycharmProjects/RiskGame/polygon_xy_flat.json", "r") as f:
             self.geo_data = json.load(f)
 
     def create_countries(self):
