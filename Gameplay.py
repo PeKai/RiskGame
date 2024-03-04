@@ -2,7 +2,7 @@ import pygame as pg
 import time
 import sys
 
-from src.Map import Map
+from Map import Map
 
 
 class Gameplay:
