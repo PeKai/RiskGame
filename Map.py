@@ -2,8 +2,8 @@ import json
 import pygame as pg
 import random
 
-from src.Continent import Continent
-from src.Country import Country
+from Continent import Continent
+from Country import Country
 
 
 class Map:
@@ -25,7 +25,6 @@ class Map:
     continents_class_europe = []
     continents_class_europe1 = []
 
-
     def __init__(self):
         self.geo_data = None
         self.json_map()
@@ -33,7 +32,7 @@ class Map:
         self.long_scan = pg.Vector2(1000, 50)
 
     def json_map(self):
-        with open("/Users/USERNAME/PycharmProjects/RiskGame/polygon_xy_flat.json", "r") as f:
+        with open("./polygon_xy_flat.json", "r") as f:
             self.geo_data = json.load(f)
 
     def create_countries(self):
