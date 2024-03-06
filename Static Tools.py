@@ -1,0 +1,2 @@
+class Statica:
+    pass
