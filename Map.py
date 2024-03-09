@@ -1,6 +1,7 @@
 import json
 import pygame as pg
 import random
+from shapely import Point, Polygon
 
 from Continent import Continent
 from Country import Country
