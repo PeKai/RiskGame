@@ -1,9 +1,11 @@
 import json
 import pygame as pg
 import random
+from shapely import Point, Polygon
 
 from Continent import Continent
 from Country import Country
+from Waterlines import Waterlines
 
 
 class Map:
@@ -22,18 +24,32 @@ class Map:
     continents = {'Europe':  ['West Europe', 'Great Britain',
                   'Southern Europe', 'North Europe', 'Scandinavia', 'Iceland']}
     random_colors = [c for c in range(0, 250, 1)]
-    continents_class_europe = []
-    continents_class_europe1 = []
 
     def __init__(self):
         self.geo_data = None
         self.json_map()
         self.countries = self.create_countries()
         self.long_scan = pg.Vector2(1000, 50)
+        self.waterlines = self.create_waterlines()
+        self.waterlines_csv = None
+        self.current_hov = None
 
     def json_map(self):
         with open("./polygon_xy_flat.json", "r") as f:
             self.geo_data = json.load(f)
+        with open("./polygon_xy_flat_wl.json", "r") as f:
+            self.waterlines_csv = json.load(f)
+
+    def create_waterlines(self):
+        wl = {}
+        for name, coords in self.waterlines_csv.items():
+            xy_coords = []
+            for coord in coords:
+                x = (self.M_WIDTH / 360) * (180 + coord[0])
+                y = (self.M_HEIGHT / 180) * (90 - coord[1])
+                xy_coords.append(pg.Vector2(x, y))
+            wl[name] = Waterlines(name, xy_coords, (30, 25, 10))
+        return wl
 
     def create_countries(self):
         countries = {}
@@ -43,36 +59,45 @@ class Map:
                 x = (self.M_WIDTH / 360) * (180 + coord[0])
                 y = (self.M_HEIGHT / 180) * (90 - coord[1])
                 xy_coords.append(pg.Vector2(x, y))
-            if name in self.territory['West Europe']:
-                countries[name] = Country(name, xy_coords, (255, 255, self.random_colors[0]))
-                self.continents_class_europe.append(name)
-            elif name in self.territory['Great Britain']:
-                countries[name] = Country(name, xy_coords, (255, 255, self.random_colors[1]))
-                self.continents_class_europe1.append(name)
-            elif name in self.territory['Iceland']:
-                countries[name] = Country(name, xy_coords, (255, 255, self.random_colors[2]))
-            elif name in self.territory['Southern Europe']:
-                countries[name] = Country(name, xy_coords, (255, self.random_colors[0], 255))
-            elif name in self.territory['Ukraine']:
-                countries[name] = Country(name, xy_coords, (255, self.random_colors[1], 255))
-            elif name in self.territory['Scandinavia']:
-                countries[name] = Country(name, xy_coords, (255, self.random_colors[2], 255))
-            elif name in self.territory['Northern Europe']:
-                countries[name] = Country(name, xy_coords, (self.random_colors[0], 255, 255))
-            elif name in self.territory['Greenland']:
-                countries[name] = Country(name, xy_coords, (self.random_colors[1], 255, 255))
-            elif name == 'Antarctica':
-                pass
-            else:
-                countries[name] = Country(name, xy_coords, (random.randrange(0,250),
-                                                            random.randrange(0,250),
-                                                            random.randrange(0,250)))
+            countries[name] = Country(name, xy_coords, (random.randrange(60, 250),
+                                                        random.randrange(55, 245),
+                                                        random.randrange(35, 220)))
         return countries
 
     def draw(self, screen: pg.Surface):
-        screen.fill((14,135,204))
+        screen.fill((194, 178, 128))
         for country in self.countries.values():
             country.draw(screen, self.long_scan)
+        for waterline in self.waterlines.values():
+            waterline.draw(screen, self.long_scan)
+        hover_surface = pg.Surface((500, 120), pg.SRCALPHA)
+        hover_surface.fill((70, 65, 50, 100))
+        screen.blit(hover_surface, (390, 650))
+        mouse_pos = pg.mouse.get_pos()
+        self.current_hov = None
+        for country in self.countries.values():
+            if Point(pg.Vector2(self.long_scan.x + mouse_pos[0] - 150, self.long_scan.y + mouse_pos[1] - 35))\
+                    .within(Polygon(country.coords)):
+                self.current_hov = country
+        if self.current_hov is not None:
+            drawn_text = pg.font.SysFont(None, 20).render(str(self.current_hov.name), True, (230, 225, 210))
+            text_area = drawn_text.get_rect()
+            text_area.topleft = (410, 670)
+            screen.blit(drawn_text, text_area)
+            drawn_text = pg.font.SysFont(None, 20).render(("Infantry: " + str(self.current_hov.Infantry)),
+                                                          True, (30, 25, 10))
+            text_area = drawn_text.get_rect()
+            text_area.topleft = (410, 690)
+            screen.blit(drawn_text, text_area)
+            drawn_text = pg.font.SysFont(None, 20).render(("Cavalry: " + str(self.current_hov.Cavalry)), True, (30, 25, 10))
+            text_area = drawn_text.get_rect()
+            text_area.topleft = (410, 710)
+            screen.blit(drawn_text, text_area)
+            drawn_text = pg.font.SysFont(None, 20).render(("Artillery: " + str(self.current_hov.Artillery)),
+                                                          True, (30, 25, 10))
+            text_area = drawn_text.get_rect()
+            text_area.topleft = (410, 730)
+            screen.blit(drawn_text, text_area)
 
     def update(self):
         self.update_camera_long()
@@ -84,17 +109,9 @@ class Map:
         if self.long_scan.x < 300:
             if button[pg.K_d]:
                 self.long_scan.x += 200
-            if button[pg.K_w]:
-                self.long_scan.y -= 200
-            if button[pg.K_s]:
-                self.long_scan.y += 200
-        elif self.long_scan.x > 600:
+        elif self.long_scan.x > 850:
             if button[pg.K_a]:
                 self.long_scan.x -= 200
-            if button[pg.K_w]:
-                self.long_scan.y -= 200
-            if button[pg.K_s]:
-                self.long_scan.y += 200
         else:
             if button[pg.K_a]:
                 self.long_scan.x -= 200
