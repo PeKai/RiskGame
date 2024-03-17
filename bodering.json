@@ -1,0 +1,195 @@
+{
+    "South Africa": [
+        "East Africa",
+        "Congo"
+    ],
+    "Middle East": [
+        "Afghanistan",
+        "Ukraine",
+        "South Europe",
+        "India",
+        "Egypt"
+    ],
+    "Venezuela": [
+        "Brazil",
+        "Peru",
+        "Central America"
+    ],
+    "Afghanistan": [
+        "Middle East",
+        "Ukraine",
+        "India",
+        "Ural",
+        "China"
+    ],
+    "Brazil": [
+        "Venezuela",
+        "Peru",
+        "Argentina"
+    ],
+    "Great Britain": [],
+    "Ukraine": [
+        "Middle East",
+        "Afghanistan",
+        "South Europe",
+        "Scandinavia",
+        "Northern Europe",
+        "Ural"
+    ],
+    "East Africa": [
+        "South Africa",
+        "North Africa",
+        "Egypt",
+        "Congo"
+    ],
+    "North Africa": [
+        "East Africa",
+        "Egypt",
+        "Congo"
+    ],
+    "South Europe": [
+        "Middle East",
+        "Ukraine",
+        "Northern Europe",
+        "Western Europe"
+    ],
+    "Scandinavia": [
+        "Ukraine"
+    ],
+    "Northern Europe": [
+        "Ukraine",
+        "South Europe",
+        "Western Europe"
+    ],
+    "Peru": [
+        "Venezuela",
+        "Brazil",
+        "Argentina"
+    ],
+    "Central America": [
+        "Venezuela",
+        "Eastern United States",
+        "Western United States"
+    ],
+    "India": [
+        "Middle East",
+        "Afghanistan",
+        "China",
+        "Siam"
+    ],
+    "Madagascar": [],
+    "Japan": [],
+    "Iceland": [],
+    "Greenland": [],
+    "Argentina": [
+        "Brazil",
+        "Peru"
+    ],
+    "Western Europe": [
+        "South Europe",
+        "Northern Europe"
+    ],
+    "New Guinea": [],
+    "Ural": [
+        "Afghanistan",
+        "Ukraine",
+        "Siberia",
+        "China"
+    ],
+    "Siberia": [
+        "Ural",
+        "Yakutsk",
+        "Irkusk",
+        "China",
+        "Mongolia"
+    ],
+    "Yakutsk": [
+        "Siberia",
+        "Irkusk",
+        "Kamchatka"
+    ],
+    "Irkusk": [
+        "Siberia",
+        "Yakutsk",
+        "Kamchatka",
+        "Mongolia"
+    ],
+    "Kamchatka": [
+        "Yakutsk",
+        "Irkusk",
+        "Mongolia"
+    ],
+    "Eastern United States": [
+        "Central America",
+        "Ontario",
+        "Quebec",
+        "Western United States"
+    ],
+    "Alaska": [
+        "North West territory",
+        "Alberta"
+    ],
+    "North West territory": [
+        "Alaska",
+        "Ontario",
+        "Alberta"
+    ],
+    "Ontario": [
+        "Eastern United States",
+        "North West territory",
+        "Quebec",
+        "Western United States",
+        "Alberta"
+    ],
+    "Quebec": [
+        "Eastern United States",
+        "Ontario"
+    ],
+    "Eastern Australia": [
+        "Western Australia"
+    ],
+    "Western United States": [
+        "Central America",
+        "Eastern United States",
+        "Ontario",
+        "Alberta"
+    ],
+    "China": [
+        "Afghanistan",
+        "India",
+        "Ural",
+        "Siberia",
+        "Mongolia",
+        "Siam"
+    ],
+    "Alberta": [
+        "Alaska",
+        "North West territory",
+        "Ontario",
+        "Western United States"
+    ],
+    "Western Australia": [
+        "Eastern Australia"
+    ],
+    "Indonesia": [],
+    "Mongolia": [
+        "Siberia",
+        "Irkusk",
+        "Kamchatka",
+        "China"
+    ],
+    "Egypt": [
+        "Middle East",
+        "East Africa",
+        "North Africa"
+    ],
+    "Congo": [
+        "South Africa",
+        "East Africa",
+        "North Africa"
+    ],
+    "Siam": [
+        "India",
+        "China"
+    ]
+}
