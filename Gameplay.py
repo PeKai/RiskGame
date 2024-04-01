@@ -3,8 +3,8 @@ import pygame as pg
 import time
 import sys
 
-from src.Map import Map
-from src.Player import Player
+from Map import Map
+from Player import Player
 
 
 class Gameplay:
