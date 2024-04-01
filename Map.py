@@ -4,8 +4,8 @@ import random
 
 from shapely import Point, Polygon
 
-from src.Country import Country
-from src.Waterlines import Waterlines
+from Country import Country
+from Waterlines import Waterlines
 
 
 class Map:
