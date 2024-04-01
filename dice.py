@@ -15,14 +15,14 @@ class Dice:
 
 class Battle:
     def __init__(self, noAttackTroops: int, noDefenceTroops: int):
-        if 0 < noAttackTroops <= 3:
+        if noAttackTroops > 3:
+            raise ValueError("Something went wrong! 1")
+        else:
             self.noAttackTroops = noAttackTroops
+        if noDefenceTroops > 2:
+            raise ValueError("Something went wrong! 2")
         else:
-            raise ValueError("Number of attacking troops must be 1 to 3")
-        if 0 < noDefenceTroops <= 2:
             self.noDefenceTroops = noDefenceTroops
-        else:
-            raise ValueError("Number of defending troops must be 1 or 2")
 
         self.attackDie = []
         self.defenceDie = []
