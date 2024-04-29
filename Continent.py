@@ -1,4 +1,4 @@
-from Country import Country
+from src.Country import Country
 
 
 class Continent:

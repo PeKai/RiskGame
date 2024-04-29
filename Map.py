@@ -1,44 +1,47 @@
 import json
 import pygame as pg
 import random
+
 from shapely import Point, Polygon
 
-from Continent import Continent
-from Country import Country
-from Waterlines import Waterlines
+from src.Country import Country
+from src.Infantry import Infantry
+from src.RiskCard import RiskCard
+from src.Waterlines import Waterlines
 
 
 class Map:
     M_WIDTH = 2.05 * 4000 * 0.25
     M_HEIGHT = 1.0 * 4000 * 0.25
-    territory = {'West Europe': ['France.', 'Spain.', 'Portugal.'],
-                 'Great Britain': ['United Kingdom.', 'Ireland.'],
-                 'Iceland': ['Iceland.'],
-                 'Southern Europe': ['Italy.', 'Switzerland.', 'Austria.', 'Greece.', 'Albania.',
-                                     'North Macedonia.', 'Kosovo.', 'Montenegro.', 'Bosnia and Herzegovina.',
-                                     'Croatia.', 'Serbia.', 'Slovenia.', 'Hungary.', 'Romania.', 'Bulgaria.'],
-                 'Northern Europe': ['Germany.', 'Netherlands.', 'Belgium.', 'Denmark.', 'Poland.', 'Slovakia.', 'Czechia.'],
-                 'Ukraine': ['Ukraine.', 'Moldova.', 'Belarus.', 'Lithuania.', 'Latvia.', 'Estonia.', 'Russia.'],
-                 'Scandinavia': ['Sweden.', 'Norway.', 'Finland.'],
-                 'Greenland': ['Greenland.']}
-    continents = {'Europe':  ['West Europe', 'Great Britain',
-                  'Southern Europe', 'North Europe', 'Scandinavia', 'Iceland']}
     random_colors = [c for c in range(0, 250, 1)]
 
-    def __init__(self):
+    def __init__(self, screen, game):
+        self.turn = None
+        self.game = game
+        self.player = None
+        self.boders_dic = None
         self.geo_data = None
         self.json_map()
         self.countries = self.create_countries()
         self.long_scan = pg.Vector2(1000, 50)
         self.waterlines = self.create_waterlines()
+        self.riskcards = self.create_riskcards()
         self.waterlines_csv = None
         self.current_hov = None
+        for country in self.countries.values():
+            country.get_map(self)
+        self.screen = screen
 
     def json_map(self):
-        with open("./polygon_xy_flat.json", "r") as f:
+        with open("/Users/maximilianrahneberg/PycharmProjects/RiskGame/"
+                  "Proprietary Out-Source Data/Data/Geo/polygon_xy_flat.json", "r") as f:
             self.geo_data = json.load(f)
-        with open("./polygon_xy_flat_wl.json", "r") as f:
+        with open("/Users/maximilianrahneberg/PycharmProjects/RiskGame/"
+                  "Proprietary Out-Source Data/Data/Geo/polygon_xy_flat_wl.json", "r") as f:
             self.waterlines_csv = json.load(f)
+        with open("/Users/maximilianrahneberg/PycharmProjects/RiskGame/Proprietary Out-Source Data/Data/bodering.json",
+                  "r") as f:
+            self.boders_dic = json.load(f)
 
     def create_waterlines(self):
         wl = {}
@@ -59,12 +62,21 @@ class Map:
                 x = (self.M_WIDTH / 360) * (180 + coord[0])
                 y = (self.M_HEIGHT / 180) * (90 - coord[1])
                 xy_coords.append(pg.Vector2(x, y))
-            countries[name] = Country(name, xy_coords, (random.randrange(60, 250),
-                                                        random.randrange(55, 245),
-                                                        random.randrange(35, 220)))
+            countries[name] = Country(name, xy_coords, (random.randrange(70, 220),
+                                                        random.randrange(65, 215),
+                                                        random.randrange(50, 200)))
         return countries
 
+    def create_riskcards(self):
+        riskcard_list = []
+        for country in self.countries.keys():
+            for trooptype in Infantry:
+                riskcard_i = RiskCard(country, trooptype.name)
+                riskcard_list.append(riskcard_i)
+        return riskcard_list
+
     def draw(self, screen: pg.Surface):
+        self.screen = screen
         screen.fill((194, 178, 128))
         for country in self.countries.values():
             country.draw(screen, self.long_scan)
@@ -76,7 +88,7 @@ class Map:
         mouse_pos = pg.mouse.get_pos()
         self.current_hov = None
         for country in self.countries.values():
-            if Point(pg.Vector2(self.long_scan.x + mouse_pos[0] - 150, self.long_scan.y + mouse_pos[1] - 35))\
+            if Point(pg.Vector2(self.long_scan.x + mouse_pos[0] - 150, self.long_scan.y + mouse_pos[1] - 35)) \
                     .within(Polygon(country.coords)):
                 self.current_hov = country
         if self.current_hov is not None:
@@ -89,7 +101,8 @@ class Map:
             text_area = drawn_text.get_rect()
             text_area.topleft = (410, 690)
             screen.blit(drawn_text, text_area)
-            drawn_text = pg.font.SysFont(None, 20).render(("Cavalry: " + str(self.current_hov.Cavalry)), True, (30, 25, 10))
+            drawn_text = pg.font.SysFont(None, 20).render(("Cavalry: " + str(self.current_hov.Cavalry)), True,
+                                                          (30, 25, 10))
             text_area = drawn_text.get_rect()
             text_area.topleft = (410, 710)
             screen.blit(drawn_text, text_area)
@@ -98,6 +111,45 @@ class Map:
             text_area = drawn_text.get_rect()
             text_area.topleft = (410, 730)
             screen.blit(drawn_text, text_area)
+
+        if self.game.mode == "mu":
+            self.draw_moving()
+        else:
+            pass
+
+        if self.game.mode == "au":
+            self.draw_moving()
+        else:
+            pass
+
+        if self.game.mode == "pu":
+            self.draw_placing()
+        else:
+            pass
+
+    def draw_moving(self):
+
+        drawn_text = pg.font.SysFont(None, 20).render("Army: " + str(self.game.turn.moved_troops), True, (230, 230, 230))
+        text_area = drawn_text.get_rect()
+        text_area.topleft = (570, 670)
+        self.screen.blit(drawn_text, text_area)
+
+        drawn_text = pg.font.SysFont(None, 20).render("From: " + self.game.turn.inland, True, (230, 230, 230))
+        text_area = drawn_text.get_rect()
+        text_area.topleft = (570, 690)
+        self.screen.blit(drawn_text, text_area)
+
+        drawn_text = pg.font.SysFont(None, 20).render("To: " + self.game.turn.outland, True, (230, 230, 230))
+        text_area = drawn_text.get_rect()
+        text_area.topleft = (570, 710)
+        self.screen.blit(drawn_text, text_area)
+
+    def draw_placing(self):
+
+        drawn_text = pg.font.SysFont(None, 20).render("Troops: Inf.", True, (230, 230, 230))
+        text_area = drawn_text.get_rect()
+        text_area.topleft = (570, 670)
+        self.screen.blit(drawn_text, text_area)
 
     def update(self):
         self.update_camera_long()
@@ -120,9 +172,10 @@ class Map:
 
     def update_zoom(self):
         button = pg.key.get_pressed()
-        if button[pg.K_UP]:
+        if button[pg.BUTTON_WHEELUP]:
             self.M_WIDTH *= 0.2
             self.M_HEIGHT *= 0.2
             self.create_countries()
 
-
+    def turn(self, turn):
+        self.turn = turn
