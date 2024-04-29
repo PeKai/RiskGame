@@ -4,10 +4,10 @@ import random
 
 from shapely import Point, Polygon
 
-from src.Country import Country
-from src.Infantry import Infantry
-from src.RiskCard import RiskCard
-from src.Waterlines import Waterlines
+from Country import Country
+from Infantry import Infantry
+from RiskCard import RiskCard
+from Waterlines import Waterlines
 
 
 class Map:
