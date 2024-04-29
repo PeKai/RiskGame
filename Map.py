@@ -33,13 +33,11 @@ class Map:
         self.screen = screen
 
     def json_map(self):
-        with open("/Users/maximilianrahneberg/PycharmProjects/RiskGame/"
-                  "Proprietary Out-Source Data/Data/Geo/polygon_xy_flat.json", "r") as f:
+        with open("./polygon_xy_flat.json", "r") as f:
             self.geo_data = json.load(f)
-        with open("/Users/maximilianrahneberg/PycharmProjects/RiskGame/"
-                  "Proprietary Out-Source Data/Data/Geo/polygon_xy_flat_wl.json", "r") as f:
+        with open("./polygon_xy_flat_wl.json", "r") as f:
             self.waterlines_csv = json.load(f)
-        with open("/Users/maximilianrahneberg/PycharmProjects/RiskGame/Proprietary Out-Source Data/Data/bodering.json",
+        with open("./bodering.json",
                   "r") as f:
             self.boders_dic = json.load(f)
 
