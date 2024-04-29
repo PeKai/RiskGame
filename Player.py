@@ -2,7 +2,8 @@ import random
 
 import pygame as pg
 import time
-from src import Country, Map
+from Country import Country
+from Map import Map
 import dice
 
 
