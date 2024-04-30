@@ -9,6 +9,9 @@ import dice
 
 class Player:
     def __init__(self, world: Map, color):
+        """
+        Instance of a Player. In this game two objects are created from this class, called player and AIplayer, as shown in the Gameplay.py.
+        """
         self.cards = [0, 0, 0, 0, 0, 0]
         self.turn_is = None
         self.world = world
@@ -22,6 +25,12 @@ class Player:
         self.moved_troops = 0
 
     def update(self, mode):
+        """
+        The player class updates nearly every 0.1 seconds, and the ability to perform certain tasks is based on weather they are in 
+        "pu" placing units mode
+        "mu" moving units mode
+        "au" attacking units mode
+        """
         if mode == "pu":
             self.place_units()
         elif mode == "mu":
@@ -30,6 +39,10 @@ class Player:
             self.attack_country()
 
     def place_units(self):
+        """
+        Implementation of the placing phase using for the player. Certain functionalities likes looking at what is currently being hovered on is done
+        by getting the world, by doing self.world. Self.world is passed on through the constructor.
+        """
         self.bordering_countries()
         if self.world.current_hov is None:
             pass
@@ -59,6 +72,10 @@ class Player:
                 pass
 
     def move_units(self):
+        """
+        Implementation of the moving phase using for the player. Certain functionalities likes looking at what is currently being hovered on is done
+        by getting the world, by doing self.world. Self.world is passed on through the constructor.
+        """
         mouse_pressed = pg.mouse.get_pressed()
         key_pressed = pg.key.get_pressed()
         current_hov_country = None
@@ -98,6 +115,10 @@ class Player:
                 self.moved_troops -= 1
 
     def attack_country(self):
+        """
+        Implementation of the attacking phase using for the player. Certain functionalities likes looking at what is currently being hovered on is done
+        by getting the world, by doing self.world. Self.world is passed on through the constructor.
+        """
         mouse_pressed = pg.mouse.get_pressed()
         key_pressed = pg.key.get_pressed()
         current_hov_country = None
@@ -170,7 +191,10 @@ class Player:
             if key_pressed[pg.K_s] and self.moved_troops > 0:
                 self.moved_troops -= 1
 
-    def bordering_countries(self) -> list:
+    def bordering_countries(self):
+        """
+        This functions purpose is to see the countries you border which you own. All countries that meet this criteria are than returned in a list.
+        """
         l = []
         for k, v in self.world.boders_dic.items():
             for names in self.controlled_countries:
@@ -179,9 +203,15 @@ class Player:
         return l
 
     def turn(self, turn):
+        """
+        A method that allows you get access the turn variables in the Gameplay.py file.
+        """
         self.turn_is = turn
 
     def add_card(self, card):
+        """
+        Important method, that adds card to the list of cards the player has. Instead of using .append(), it puts a card in the list where it first finds a int 0.
+        """
         for i in range(len(self.cards)):
             if self.cards[i] == 0:
                 self.cards[i] = card
