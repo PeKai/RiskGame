@@ -11,11 +11,14 @@ from Waterlines import Waterlines
 
 
 class Map:
-    M_WIDTH = 2.05 * 4000 * 0.25
-    M_HEIGHT = 1.0 * 4000 * 0.25
-    random_colors = [c for c in range(0, 250, 1)]
+    M_WIDTH = 2.05 * 4000 * 0.25 # Scaling factor in the x axis
+    M_HEIGHT = 1.0 * 4000 * 0.25 # Scaling factor in the y axis
+    random_colors = [c for c in range(0, 250, 1)] # Random color in RGD
 
     def __init__(self, screen, game):
+        """
+        The functionality of the Map class is maily for getting data from the polygon files, bordering.py files and drawing them to create a map.
+        """
         self.turn = None
         self.game = game
         self.player = None
@@ -33,6 +36,11 @@ class Map:
         self.screen = screen
 
     def json_map(self):
+        """
+        /polygon_xy_flat.json, which consists of the coordinates for the countries in the Risk map.
+        /polygon_xy_flat_wl.json, which consists of the coordinates for the waterlines in the Risk map.
+        /bodering.json, which consists of a dictionary of the bordering countries for each country in the Risk map.
+        """
         with open("./polygon_xy_flat.json", "r") as f:
             self.geo_data = json.load(f)
         with open("./polygon_xy_flat_wl.json", "r") as f:
@@ -42,6 +50,9 @@ class Map:
             self.boders_dic = json.load(f)
 
     def create_waterlines(self):
+        """
+        Returns a ditionary of the name of each waterline in the /polygon_xy_flat_wl.json file and the correspondent Waterlines class.
+        """
         wl = {}
         for name, coords in self.waterlines_csv.items():
             xy_coords = []
@@ -53,6 +64,9 @@ class Map:
         return wl
 
     def create_countries(self):
+        """
+        Returns a ditionary of the name of each country in the /polygon_xy_flat.json file and the correspondent Country class.
+        """
         countries = {}
         for name, coords in self.geo_data.items():
             xy_coords = []
@@ -66,6 +80,9 @@ class Map:
         return countries
 
     def create_riskcards(self):
+        """
+        Returns a list of the name of Risk Card, using each country name and troop type.
+        """
         riskcard_list = []
         for country in self.countries.keys():
             for trooptype in Infantry:
@@ -74,6 +91,10 @@ class Map:
         return riskcard_list
 
     def draw(self, screen: pg.Surface):
+        """
+        This function is used to draw anything that is needed for the map. Important is to recognize that this gets updated multiable times in the Gameplay.py class.
+        You will see the drawn_text...text_area...blit a lot throughout this project. It simply renders text on the python screen.
+        """
         self.screen = screen
         screen.fill((194, 178, 128))
         for country in self.countries.values():
@@ -126,7 +147,9 @@ class Map:
             pass
 
     def draw_moving(self):
-
+        """
+        Rendering the text for moving the troops of each player.
+        """
         drawn_text = pg.font.SysFont(None, 20).render("Army: " + str(self.game.turn.moved_troops), True, (230, 230, 230))
         text_area = drawn_text.get_rect()
         text_area.topleft = (570, 670)
@@ -143,17 +166,25 @@ class Map:
         self.screen.blit(drawn_text, text_area)
 
     def draw_placing(self):
-
+        """
+        Rendering the text for placing the troops of each player.
+        """
         drawn_text = pg.font.SysFont(None, 20).render("Troops: Inf.", True, (230, 230, 230))
         text_area = drawn_text.get_rect()
         text_area.topleft = (570, 670)
         self.screen.blit(drawn_text, text_area)
 
     def update(self):
+        """
+        This update() function gets looped throuhg multiable times, through the while loop in the Gameplay.py class. 
+        """
         self.update_camera_long()
         self.update_zoom()
 
     def update_camera_long(self):
+        """
+        This update_camera_long() function essentially allows you to move the screen by pressing a and d. It also prevents you going futher than the map, i.e. "< 300".
+        """
         button = pg.key.get_pressed()
 
         if self.long_scan.x < 300:
@@ -169,6 +200,9 @@ class Map:
                 self.long_scan.x += 200
 
     def update_zoom(self):
+        """
+        This update_zoom() function essentially allows zoom using the mouse wheel.
+        """
         button = pg.key.get_pressed()
         if button[pg.BUTTON_WHEELUP]:
             self.M_WIDTH *= 0.2
@@ -176,4 +210,7 @@ class Map:
             self.create_countries()
 
     def turn(self, turn):
+        """
+        This turn() function that allows you to get the turn variable which is using the Gameplay.py file.
+        """
         self.turn = turn
