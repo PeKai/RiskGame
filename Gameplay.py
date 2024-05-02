@@ -10,7 +10,10 @@ from Player import Player
 
 class Gameplay:
     def __init__(self, screen):
-
+        """
+        This Gameplay claass is responsable for the updating of all graphics, including the map, buttons, and tabs.
+        It is the only class that creates instances of the Map and Player classes, and changes it based on button interaction or hover interaction.
+        """
         self.rectGiveC = None
         self.hoverGiveC = None
         self.GiveCb = None
@@ -22,8 +25,10 @@ class Gameplay:
         self.recttb = None
         self.hoveredtb = None
         self.tb = None
+        
         self.rectmb = None
         self.hoveredmb = None
+        
         self.finish_phase_image = None
         self.mbutton = None
         self.current_phase_rect = None
@@ -40,6 +45,9 @@ class Gameplay:
         self.turn = None
 
     def run(self):
+        """
+        This simple function is in a while loop until you press the exit button.
+        """
         while self.is_play:
             time.sleep(0.005)
             self.events()
@@ -48,6 +56,9 @@ class Gameplay:
             pg.display.update()
 
     def update(self):
+        """
+        This function does all the updates which are not drawing, event, or display related, like checking whos turn it is.
+        """
         self.map.update()
         if self.turn == self.player:
             self.player.update(self.mode)
@@ -79,6 +90,9 @@ class Gameplay:
             pass
 
     def events(self):
+        """
+        Here we check for all keystoke events. Keep in mind that this functions gets updated until self.is_play is false.
+        """
         for e in pg.event.get():
             if e.type == pg.KEYDOWN:
                 if e.key == pg.K_ESCAPE:
@@ -87,13 +101,18 @@ class Gameplay:
                 self.is_play = False
 
     def draw(self):
+        """
+        This function draws the map, countries, buttons, tabs, and everything else which is on the screen.
+        """
         self.map.draw(self.screen)
         self.phase_gui()
         self.player_turn_gui()
         self.player_cards_gui()
 
     def phase_gui(self):
-
+        """
+        Phase_gui, draws the phase buttons, implments the events that happen after a phase button has been pressed, and implements hovering features of all phase buttons.
+        """
         self.mbutton = pg.Surface((50, 20), pg.SRCALPHA)
         self.mbutton.fill((0, 0, 0, 0))
         self.rectmb = self.mbutton.get_rect(topleft=(504, 667))
@@ -169,7 +188,10 @@ class Gameplay:
             screen.blit(drawn_text, text_area)
 
     def player_turn_gui(self):
-
+        """
+        player_turn_gui, draws the player turn buttons, implments the events that happen after a the player turn button has been pressed, 
+        and implements hovering features of all phase buttons.
+        """
         self.tb = pg.Surface((50, 20), pg.SRCALPHA)
         self.tb.fill((0, 0, 0, 0))
         self.recttb = self.tb.get_rect(topleft=(654, 667))
@@ -228,7 +250,10 @@ class Gameplay:
                 screen.blit(drawn_text_AIPlayer, text_area_AIPlayer)
 
     def player_cards_gui(self):
-
+        """
+        player_cards_gui, draws the player get card and give card buttons, implments the events that happen after a the players get card and give card buttons has been pressed, 
+        and implements hovering features of the get card and give card buttons.
+        """
         self.GetCb = pg.Surface((60, 20), pg.SRCALPHA)
         self.GetCb.fill((0, 0, 0, 0))
         self.rectGetC = self.GetCb.get_rect(topleft=(720, 670))
@@ -402,7 +427,10 @@ class Gameplay:
                 if i == 3 or i == 6:
                     self.player.cards = [0, 0, 0, 0, 0, 0]
 
-
+"""
+This is the starting function of the game. Important is to recognize that we have not implemented a dynamic screen siize for this game.
+It is recommneded to play this game on a screen with screensize with 2560 × 1600 pixels, but other screensizes have worked!
+"""
 if __name__ == "__main__":
     pg.init()
 
