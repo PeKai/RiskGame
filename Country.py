@@ -7,6 +7,10 @@ from shapely import Polygon, Point
 
 class Country:
     def __init__(self, name, coords, color):
+        """
+        This represents a instance of a Country, where name represents the name of the country, coords represents all pixels on the border, 
+        and color represents the color of this country.
+        """
         self.name = name
         self.coords = coords
         self.color = color
@@ -17,9 +21,16 @@ class Country:
         self.map = None
 
     def get_map(self, map):
+        """
+        Instance of map is in the Gameplay.py, so this is a handy way of getting a instance of the Map class.
+        """
         self.map = map
 
     def draw(self, screen, long_scan):
+        """
+        This function gets called in the Gameplay class, under the draw function in the Gameplay class which is responsiable for updating itself consistently.
+        This function essentially draws the map onto the screen, and uses a long_scan offset that changes based on you pressing w or s.
+        """
         pg.draw.polygon(screen, (230, 225, 210) if self.map.current_hov == self else self.color, [(x - long_scan.x + 150, y - long_scan.y + 35) for x, y in self.coords],)
         pg.draw.polygon(screen, (50, 45, 30), [(x - long_scan.x + 150, y - long_scan.y + 35) for x, y in self.coords], width=1)
         drawn_text = pg.font.SysFont(None, 20).render(str(sum([self.Infantry, self.Cavalry, self.Artillery])), True, (0,0,0))
